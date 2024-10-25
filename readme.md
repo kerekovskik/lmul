@@ -3,6 +3,7 @@
 This repo implements the algorithm from the paper titled 
 [ADDITION IS ALL YOU NEED FOR ENERGY-EFFICIENT LANGUAGE MODELS](https://arxiv.org/abs/2410.00907)
 
+This repo uses NEON SIMD instructions for M3 ARM chipset on macbook pro laptops.
 
 
 ## First, ensure you have Rust and Python development tools installed
