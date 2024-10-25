@@ -1,0 +1,53 @@
+# General
+*.DS_Store
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+.Python
+env/
+venv/
+env.bak/
+*.egg-info/
+.eggs/
+build/
+dist/
+*.egg
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
+coverage.xml
+.hypothesis/
+.cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Rust
+/target/
+/Cargo.lock
+**/*.rs.bk
+
+# Rust + Python integration
+*.so
+*.dylib
+*.dll
+
+# VSCode / IDEs
+.vscode/
+.idea/
+
+# Byte-compiled Rust extensions (produced by maturin, setuptools-rust, etc.)
+**/build/
+**/target/
+
+
+.venv
+notebooks
+repo_contents.txt

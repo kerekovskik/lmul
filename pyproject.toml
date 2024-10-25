@@ -1,0 +1,20 @@
+[build-system]
+requires = ["maturin>=0.13"]
+build-backend = "maturin"
+
+[project]
+name = "lmul"
+version = "0.1.0"
+description = "A Python package that offloads math operations to Rust"
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+keywords = ["math", "rust", "python"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Rust",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "numpy"
+]
