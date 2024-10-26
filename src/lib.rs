@@ -113,27 +113,45 @@ impl MetalState {
         let device = Device::system_default().expect("No Metal device found");
         let command_queue = device.new_command_queue();
         
-        // Get the path to the metallib relative to the current executable
-        let exe_path = std::env::current_exe().expect("Failed to get executable path");
-        let exe_dir = exe_path.parent().expect("Failed to get executable directory");
-        let metallib_path = exe_dir.join("lmul.metallib");
+        // Try multiple possible locations for the metallib file
+        let possible_paths = [
+            // Current executable directory
+            std::env::current_exe()
+                .ok()
+                .and_then(|p| p.parent().map(|p| p.join("lmul.metallib"))),
+            
+            // Current executable parent/lmul directory
+            std::env::current_exe()
+                .ok()
+                .and_then(|p| p.parent().map(|p| p.parent().map(|p| p.join("lmul/lmul.metallib"))))
+                .flatten(),
+            
+            // Current working directory
+            std::env::current_dir().ok().map(|p| p.join("lmul/lmul.metallib")),
+            
+            // Package directory relative to Cargo.toml
+            std::env::var("CARGO_MANIFEST_DIR")
+                .ok()
+                .map(|p| PathBuf::from(p).join("lmul/lmul.metallib")),
+        ];
         
-        if !metallib_path.exists() {
-            // Try one directory up (for development)
-            let metallib_path = exe_dir.parent().unwrap().join("lmul/lmul.metallib");
-            if !metallib_path.exists() {
-                panic!("Could not find lmul.metallib");
-            }
-        }
-        
-        
-        //let metallib_url = metal::URL::new_with_string(&format!(
-        //    "file://{}",
-        //    metallib_path.to_str().unwrap()
-        //));
+        let metallib_path = possible_paths
+            .iter()
+            .filter_map(|p| p.as_ref())
+            .find(|p| p.exists())
+            .ok_or_else(|| {
+                eprintln!("Searched paths for lmul.metallib:");
+                for path in possible_paths.iter().filter_map(|p| p.as_ref()) {
+                    eprintln!("  - {}", path.display());
+                }
+                panic!("Could not find lmul.metallib in any expected location");
+            })
+            .unwrap();
+            
+        println!("Found metallib at: {}", metallib_path.display());
         
         let library = device
-            .new_library_with_file(&metallib_path)
+            .new_library_with_file(metallib_path)
             .expect("Failed to load metallib");
             
         let kernel = library
