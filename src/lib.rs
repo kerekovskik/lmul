@@ -3,6 +3,7 @@ use pyo3::prelude::*;
 use std::arch::aarch64::*;
 use std::path::PathBuf;
 
+
 /// Extracts the sign, exponent, and mantissa from a 32-bit float.
 fn extract_float_parts(f: f32) -> (i32, i32, i32) {
     let bits = f.to_bits();
@@ -125,13 +126,14 @@ impl MetalState {
             }
         }
         
-        let metallib_url = metal::URL::new_with_string(&format!(
-            "file://{}",
-            metallib_path.to_str().unwrap()
-        ));
+        
+        //let metallib_url = metal::URL::new_with_string(&format!(
+        //    "file://{}",
+        //    metallib_path.to_str().unwrap()
+        //));
         
         let library = device
-            .new_library_with_file(metallib_url)
+            .new_library_with_file(&metallib_path)
             .expect("Failed to load metallib");
             
         let kernel = library
